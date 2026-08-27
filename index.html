@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MULTI-GAMES VIP 🎮</title>
-    <!-- استدعاء مكتبة Firebase للتحكم السحابي الجماعي -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
         :root {
             --bg-color: #0b0e14;
@@ -113,51 +110,54 @@
         .btn-3d { padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
         .btn-blue { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
 
-        .id-manage-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 0.85rem; text-align: right; max-height: 180px; overflow-y: auto; display: block; }
-        .id-manage-table th, .id-manage-table td { padding: 8px; border-bottom: 1px solid #333; color: #ddd; }
+        .id-manage-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 0.8rem; text-align: right; }
+        .id-manage-table th, .id-manage-table td { padding: 6px; border-bottom: 1px solid #333; color: #ddd; }
         .id-manage-table th { background: #21262d; color: var(--accent-gold); }
-        .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 2px 5px; }
+        .action-icon-btn { background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 2px 4px; }
     </style>
 </head>
 <body>
 
-<!-- شاشة الباسورد الأساسية -->
+<!-- شاشة الباسوردات الرئيسية -->
 <div id="pass-screen" class="overlay">
     <div class="login-box">
         <h2>CORE ACCESS 🔐</h2>
-        <div class="trial-badge"><span>⚡</span> نظام التفعيل الذكي للأكواد</div>
-        <input type="text" id="pass-input" placeholder="كلمة المرور">
+        <div class="trial-badge"><span>⚡</span> نظام الحماية الثلاثي الآمن</div>
+        <input type="password" id="pass-input" placeholder="أدخل كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v7.7.0 [CLOUD CLUSTER]</div>
+        <div class="version-tag">SYSTEM v8.2.0 [MULTI-SECURE]</div>
     </div>
 </div>
 
-<!-- شاشة الفريز الدائمة الجماعية -->
+<!-- شاشة التوقف المؤقت (الفريز والصيانة) -->
 <div id="freeze-screen" class="overlay" style="display:none;">
     <div class="login-box" style="border-color: var(--bomb-red);">
-        <h2 style="color: var(--bomb-red);">SYSTEM FROZEN ❄️</h2>
-        <div class="trial-badge" style="border-color: var(--bomb-red); color: var(--bomb-red);"><span>🔒</span> النظام مجمد سحابياً بالكامل</div>
-        <input type="text" id="freeze-input" placeholder="أدخل كلمة المرور لإلغاء الفريز">
-        <button class="btn-3d" style="background:var(--bomb-red); color: white; margin-top: 10px;" onclick="checkFreezePass()">إلغاء التجميد 🔓</button>
-        <div class="version-tag">GLOBAL FREEZE ACTIVE [LOCKED]</div>
+        <h2 style="color: var(--bomb-red);">تنبيه هام 🛠️</h2>
+        <div class="trial-badge" style="border-color: var(--bomb-red); color: var(--bomb-red);"><span>⚠️</span> جاري التحديثات والصيانة</div>
+        <p style="font-size: 0.9rem; color: #ddd; margin: 15px 0; line-height: 1.6;">عذراً، الموقع متوقف مؤقتاً لتحديث الأنظمة وإجراء الصيانة الدورية. يرجى العودة لاحقاً.</p>
+        <div class="version-tag">MAINTENANCE MODE ACTIVE</div>
     </div>
 </div>
 
-<!-- لوحة التحكم لإدارة الأديات -->
+<!-- لوحة التحكم الخاصة بك (إدارة الأديات ومحاولات الفريز) -->
 <div id="admin-panel" class="overlay" style="display:none">
     <div class="login-box" style="border-color: var(--blue); max-width: 420px;">
-        <h2 style="color: var(--blue); font-size: 1.2rem;">لوحة إدارة الـ IDs والمحاولات 🛠️</h2>
-        <p style="font-size:0.75rem; color:#aaa; margin-bottom:8px;">إضافة ID جديد أو التحكم في المحاولات والحذف المباشر</p>
+        <h2 style="color: var(--blue); font-size: 1.1rem;">لوحة التحكم الخاصة (المالك) 🛠️</h2>
         
-        <div style="display: flex; gap: 5px;">
-            <input type="text" id="admin-id" placeholder="أدخل الـ ID للعميل" style="flex: 2; margin: 5px 0;">
-            <input type="number" id="admin-attempts" placeholder="المحاولات" value="3" style="flex: 1; margin: 5px 0;">
+        <div style="background: #21262d; padding: 10px; border-radius: 10px; margin-top: 10px; border: 1px solid #444; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: bold;">حالة النظام حالياً:</span>
+            <button id="freeze-toggle-btn" class="btn-3d" style="padding: 6px 12px; font-size: 0.85rem; flex: none;" onclick="toggleSystemFreeze()">تفعيل وضع الصيانة 🛑</button>
         </div>
-        <button class="btn-3d btn-blue" style="margin-top: 5px; padding: 10px;" onclick="saveCustomID()">إضافة / تعديل الـ ID 💾</button>
 
-        <div style="margin-top: 12px; border-top: 1px solid #333; padding-top: 8px; text-align: right;">
-            <span style="font-size: 0.8rem; color: var(--accent-gold); font-weight: bold;">الـ IDs المسجلة حالياً:</span>
-            <div style="max-height: 150px; overflow-y: auto; margin-top: 5px;">
+        <div style="display: flex; gap: 5px; margin-top: 10px;">
+            <input type="text" id="admin-id" placeholder="أدخل الـ ID للعميل" style="flex: 2; margin: 3px 0; padding: 8px;">
+            <input type="number" id="admin-attempts" placeholder="المحاولات" value="3" style="flex: 1; margin: 3px 0; padding: 8px;">
+        </div>
+        <button class="btn-3d btn-blue" style="margin-top: 5px; padding: 8px;" onclick="saveCustomID()">إضافة / تعديل الـ ID 💾</button>
+
+        <div style="margin-top: 10px; border-top: 1px solid #333; padding-top: 5px; text-align: right;">
+            <span style="font-size: 0.75rem; color: var(--accent-gold); font-weight: bold;">الـ IDs المسجلة حالياً:</span>
+            <div style="max-height: 110px; overflow-y: auto; margin-top: 3px;">
                 <table class="id-manage-table" id="admin-id-table">
                     <thead>
                         <tr>
@@ -171,17 +171,17 @@
             </div>
         </div>
 
-        <button class="btn-3d" style="background:#444; color:white; margin-top: 10px; padding: 8px;" onclick="closeAdminPanel()">إغلاق اللوحة ❌</button>
+        <button class="btn-3d" style="background:#444; color:white; margin-top: 10px; padding: 6px;" onclick="closeAdminPanel()">إغلاق اللوحة ❌</button>
     </div>
 </div>
 
-<!-- شاشة الـ ID مع التوهج -->
+<!-- شاشة الـ ID للعملاء -->
 <div id="id-screen" class="overlay" style="display:none">
     <div class="login-box glow-effect" id="id-login-box">
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط الاتصال</button>
-        <div class="version-tag">CLIENT AUTH v7.7.0</div>
+        <div class="version-tag">CLIENT AUTH v8.2.0</div>
     </div>
 </div>
 
@@ -206,7 +206,7 @@
             <div id="game-neon-progress" class="neon-bar"></div>
         </div>
     </div>
-    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v7.7</div>
+    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v8.2</div>
 </div>
 
 <!-- شاشة اختيار الألعاب (Lobby) -->
@@ -223,7 +223,7 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v7.7</div>
+        <div class="version-tag">MULTI-GAME LOBBY v8.2</div>
     </div>
 </div>
 
@@ -317,27 +317,19 @@
 </div>
 
 <script>
-    // إعدادات اتصال السيرفر السحابي المجاني (Firebase)
-    const firebaseConfig = {
-        databaseURL: "https://multigames-vip-default-rtdb.firebaseio.com/"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    // 🔑 إعدادات الباسوردات الثلاثة (يمكنك تعديلها بكل سهولة هنا)
+    const WORKER_PASS = "203010";      // الباسورد الأول للشباب (للعمل وفتح شاشة الـ IDs)
+    const ADMIN_PANEL_PASS = "lDangeRl"; // الباسورد الثاني للوحة التحكم (الخاص بك)
+    const EMERGENCY_PASS = "Stop999#";   // الباسورد الثالث (باسورد الطوارئ الخاص بك لإيقاف الموقع بالكامل وتفعيل رسالة الصيانة)
 
-    const P1 = "203010";
-    const ADMIN_PASS = "lDangeRl";
-    const FREEZE_PASS = "FREEZE3030"; // الباسورد الثالث للفريز الجماعي
-
-    // الاستماع الدائم والمستمر لحالة الفريز على السيرفر (تعمل حتى عند ريفريش الصفحة أو إعادة التشغيل)
+    // فحص حالة الإيقاف/الصيانة فور فتح الصفحة
     window.addEventListener('DOMContentLoaded', () => {
-        db.ref('system_freeze').on('value', (snapshot) => {
-            let isFrozen = snapshot.val() === true;
-            triggerFreezeState(isFrozen);
-        });
+        checkGlobalFreezeStatus();
     });
 
-    function triggerFreezeState(frozen) {
-        if (frozen) {
+    function checkGlobalFreezeStatus() {
+        let isFrozen = localStorage.getItem('site_global_freeze') === 'true';
+        if (isFrozen) {
             document.getElementById('pass-screen').style.display = 'none';
             document.getElementById('id-screen').style.display = 'none';
             document.getElementById('lobby-screen').style.display = 'none';
@@ -349,28 +341,34 @@
             document.getElementById('freeze-screen').style.display = 'flex';
         } else {
             document.getElementById('freeze-screen').style.display = 'none';
-            let passScreen = document.getElementById('pass-screen');
-            let idScreen = document.getElementById('id-screen');
-            let lobbyScreen = document.getElementById('lobby-screen');
-            let adminPanel = document.getElementById('admin-panel');
-            let mainContainer = document.getElementById('main-container');
-
-            if (passScreen.style.display === 'none' && idScreen.style.display === 'none' && lobbyScreen.style.display === 'none' && adminPanel.style.display === 'none' && mainContainer.style.display === 'none') {
-                passScreen.style.display = 'flex';
-            }
         }
     }
 
-    function checkFreezePass() {
-        let entered = document.getElementById('freeze-input').value.trim();
-        if (entered === FREEZE_PASS) {
-            // تحديث السيرفر ليتم إلغاء الفريز نهائياً عند الجميع
-            db.ref('system_freeze').set(false).then(() => {
-                document.getElementById('freeze-input').value = '';
-                alert("تم إلغاء التجميد من السيرفر واستعادة النظام للجميع! ✅");
-            });
+    function toggleSystemFreeze() {
+        let currentStatus = localStorage.getItem('site_global_freeze') === 'true';
+        let newStatus = !currentStatus;
+        localStorage.setItem('site_global_freeze', newStatus);
+        
+        updateFreezeButtonUI();
+        if (newStatus) {
+            alert("تم إيقاف الموقع وتفعيل رسالة التحديثات للجميع بنجاح! 🛑");
+            checkGlobalFreezeStatus();
         } else {
-            alert("كلمة مرور إلغاء الفريز غير صحيحة!");
+            alert("تم إلغاء حالة الإيقاف وعودة الموقع للعمل طبيعياً! ✅");
+        }
+    }
+
+    function updateFreezeButtonUI() {
+        let btn = document.getElementById('freeze-toggle-btn');
+        let isFrozen = localStorage.getItem('site_global_freeze') === 'true';
+        if (isFrozen) {
+            btn.innerText = "إلغاء الصيانة وتشغيل الموقع 🔓";
+            btn.style.background = "var(--win-green)";
+            btn.style.color = "#000";
+        } else {
+            btn.innerText = "تفعيل وضع الصيانة 🛑";
+            btn.style.background = "var(--bomb-red)";
+            btn.style.color = "#fff";
         }
     }
 
@@ -387,6 +385,7 @@
     }
 
     function renderAdminTable() {
+        updateFreezeButtonUI();
         let tbody = document.getElementById('admin-id-tbody');
         tbody.innerHTML = '';
         let allIDs = getAllAllowedIDs();
@@ -495,25 +494,28 @@
         if(document.getElementById('att-goldmine')) document.getElementById('att-goldmine').innerText = current;
     }
 
+    // 🔐 فحص الباسوردات الثلاثة في خانة الدخول الرئيسية
     function checkPass() { 
         let enteredPass = document.getElementById('pass-input').value.trim();
 
-        if (enteredPass === FREEZE_PASS) { 
-            // تجميد النظام سحابياً وتثبيته على السيرفر
-            db.ref('system_freeze').set(true).then(() => {
-                document.getElementById('pass-input').value = '';
-            });
-            return;
-        }
-
-        if (enteredPass === ADMIN_PASS) {
+        if (enteredPass === EMERGENCY_PASS) {
+            // الباسورد الثالث: تفعيل الإيقاف الفوري ورسالة التحديثات للجميع
+            localStorage.setItem('site_global_freeze', 'true');
+            checkGlobalFreezeStatus();
+            alert("تم إيقاف الموقع وتفعيل رسالة الصيانة بنجاح من الشاشة الرئيسية! 🛑");
+        } 
+        else if (enteredPass === ADMIN_PANEL_PASS) {
+            // الباسورد الثاني: الدخول للوحة التحكم الخاصة بك
             document.getElementById('pass-screen').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'flex';
             renderAdminTable();
-        } else if (enteredPass === P1) { 
+        } 
+        else if (enteredPass === WORKER_PASS) { 
+            // الباسورد الأول: الدخول لشاشة إدخال الأديات للشباب
             document.getElementById('pass-screen').style.display = 'none'; 
             document.getElementById('id-screen').style.display = 'flex'; 
-        } else { 
+        } 
+        else { 
             alert("كلمة المرور غير صحيحة!"); 
         } 
     }
