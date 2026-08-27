@@ -129,12 +129,15 @@
     </div>
 </div>
 
-<!-- شاشة التوقف المؤقت (الفريز والصيانة) -->
+<!-- شاشة التوقف المؤقت (الفريز والصيانة) مع زر إدخال كلمة المرور للإلغاء -->
 <div id="freeze-screen" class="overlay" style="display:none;">
     <div class="login-box" style="border-color: var(--bomb-red);">
         <h2 style="color: var(--bomb-red);">تنبيه هام 🛠️</h2>
         <div class="trial-badge" style="border-color: var(--bomb-red); color: var(--bomb-red);"><span>⚠️</span> جاري التحديثات والصيانة</div>
         <p style="font-size: 0.9rem; color: #ddd; margin: 15px 0; line-height: 1.6;">عذراً، الموقع متوقف مؤقتاً لتحديث الأنظمة وإجراء الصيانة الدورية. يرجى العودة لاحقاً.</p>
+        
+        <button class="btn-3d" style="background: #21262d; color: var(--accent-gold); border: 1px solid var(--accent-gold); margin-top: 5px; padding: 10px; font-size: 0.9rem;" onclick="promptUnlockFreeze()">🔓 إدخال كلمة المرور لإلغاء الصيانة</button>
+        
         <div class="version-tag">MAINTENANCE MODE ACTIVE</div>
     </div>
 </div>
@@ -317,12 +320,11 @@
 </div>
 
 <script>
-    // 🔑 إعدادات الباسوردات الثلاثة (يمكنك تعديلها بكل سهولة هنا)
-    const WORKER_PASS = "203010";      // الباسورد الأول للشباب (للعمل وفتح شاشة الـ IDs)
-    const ADMIN_PANEL_PASS = "lDangeRl"; // الباسورد الثاني للوحة التحكم (الخاص بك)
-    const EMERGENCY_PASS = "Stop999#";   // الباسورد الثالث (باسورد الطوارئ الخاص بك لإيقاف الموقع بالكامل وتفعيل رسالة الصيانة)
+    // 🔑 إعدادات الباسوردات الثلاثة
+    const WORKER_PASS = "203010";      
+    const ADMIN_PANEL_PASS = "lDangeRl"; 
+    const EMERGENCY_PASS = "Stop999#";   
 
-    // فحص حالة الإيقاف/الصيانة فور فتح الصفحة
     window.addEventListener('DOMContentLoaded', () => {
         checkGlobalFreezeStatus();
     });
@@ -341,6 +343,18 @@
             document.getElementById('freeze-screen').style.display = 'flex';
         } else {
             document.getElementById('freeze-screen').style.display = 'none';
+        }
+    }
+
+    // دالة لطلب الباسورد من داخل شاشة التوقف لإلغاء الإيقاف
+    function promptUnlockFreeze() {
+        let entered = prompt("أدخل كلمة المرور لإلغاء وضع الصيانة وتشغيل الموقع:");
+        if (entered === EMERGENCY_PASS || entered === ADMIN_PANEL_PASS) {
+            localStorage.setItem('site_global_freeze', 'false');
+            checkGlobalFreezeStatus();
+            alert("تم إيقاف وضع الصيانة وعودة الموقع للعمل بنجاح! ✅");
+        } else if (entered !== null) {
+            alert("كلمة المرور غير صحيحة!");
         }
     }
 
@@ -494,24 +508,20 @@
         if(document.getElementById('att-goldmine')) document.getElementById('att-goldmine').innerText = current;
     }
 
-    // 🔐 فحص الباسوردات الثلاثة في خانة الدخول الرئيسية
     function checkPass() { 
         let enteredPass = document.getElementById('pass-input').value.trim();
 
         if (enteredPass === EMERGENCY_PASS) {
-            // الباسورد الثالث: تفعيل الإيقاف الفوري ورسالة التحديثات للجميع
             localStorage.setItem('site_global_freeze', 'true');
             checkGlobalFreezeStatus();
             alert("تم إيقاف الموقع وتفعيل رسالة الصيانة بنجاح من الشاشة الرئيسية! 🛑");
         } 
         else if (enteredPass === ADMIN_PANEL_PASS) {
-            // الباسورد الثاني: الدخول للوحة التحكم الخاصة بك
             document.getElementById('pass-screen').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'flex';
             renderAdminTable();
         } 
         else if (enteredPass === WORKER_PASS) { 
-            // الباسورد الأول: الدخول لشاشة إدخال الأديات للشباب
             document.getElementById('pass-screen').style.display = 'none'; 
             document.getElementById('id-screen').style.display = 'flex'; 
         } 
@@ -634,7 +644,6 @@
         updateAttemptsDisplay();
     }
 
-    // --- 1. لعبة Apple ---
     let curAppleRow = 0;
     let appleRowsData = [];
 
@@ -710,7 +719,6 @@
         }
     }
 
-    // --- 2. لعبة Gems & Mines ---
     let curGemsRow = 0;
     let gemsBombPositions = [];
 
@@ -791,7 +799,6 @@
         }
     }
 
-    // --- 3. لعبة Royal Feast ---
     let royalRowsData = [];
 
     function initRoyalGameSetup() {
@@ -837,7 +844,6 @@
         }
     }
 
-    // --- 4. لعبة Wild West Gold ---
     let mineMode = 2; 
     let mineCurrentStep = 0; 
     const mineTotalSteps = 6; 
@@ -919,7 +925,7 @@
 
     function activateMineCurrentStep() {
         if (mineCurrentStep < mineTotalSteps) {
-            const row = document.getElementById(`row-${mineCurrentStep}`);
+            const row = document.getElementById(`row-${mineCurrentBox = mineCurrentStep}`);
             if (row) {
                 for (let box of row.children) {
                     box.className = "mine-box active";
