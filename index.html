@@ -128,11 +128,11 @@
         <div class="trial-badge"><span>⚡</span> نظام التفعيل الذكي للأكواد</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v7.6.0 [CLOUD CLUSTER]</div>
+        <div class="version-tag">SYSTEM v7.7.0 [CLOUD CLUSTER]</div>
     </div>
 </div>
 
-<!-- شاشة الفريز الدائمة الجماعية (تشبه شاشة الباسورد الأولى تماماً) -->
+<!-- شاشة الفريز الدائمة الجماعية -->
 <div id="freeze-screen" class="overlay" style="display:none;">
     <div class="login-box" style="border-color: var(--bomb-red);">
         <h2 style="color: var(--bomb-red);">SYSTEM FROZEN ❄️</h2>
@@ -181,7 +181,7 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط الاتصال</button>
-        <div class="version-tag">CLIENT AUTH v7.6.0</div>
+        <div class="version-tag">CLIENT AUTH v7.7.0</div>
     </div>
 </div>
 
@@ -206,7 +206,7 @@
             <div id="game-neon-progress" class="neon-bar"></div>
         </div>
     </div>
-    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v7.6</div>
+    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v7.7</div>
 </div>
 
 <!-- شاشة اختيار الألعاب (Lobby) -->
@@ -223,7 +223,7 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v7.6</div>
+        <div class="version-tag">MULTI-GAME LOBBY v7.7</div>
     </div>
 </div>
 
@@ -328,7 +328,7 @@
     const ADMIN_PASS = "lDangeRl";
     const FREEZE_PASS = "FREEZE3030"; // الباسورد الثالث للفريز الجماعي
 
-    // الاستماع الفوري والتلقائي لحالة الفريز السحابية لجميع المستخدمين
+    // الاستماع الدائم والمستمر لحالة الفريز على السيرفر (تعمل حتى عند ريفريش الصفحة أو إعادة التشغيل)
     window.addEventListener('DOMContentLoaded', () => {
         db.ref('system_freeze').on('value', (snapshot) => {
             let isFrozen = snapshot.val() === true;
@@ -355,7 +355,6 @@
             let adminPanel = document.getElementById('admin-panel');
             let mainContainer = document.getElementById('main-container');
 
-            // إذا كان المستخدم ليس في شاشة اللعبة أو الأدمن، اظهر شاشة الباسورد العادية
             if (passScreen.style.display === 'none' && idScreen.style.display === 'none' && lobbyScreen.style.display === 'none' && adminPanel.style.display === 'none' && mainContainer.style.display === 'none') {
                 passScreen.style.display = 'flex';
             }
@@ -365,7 +364,7 @@
     function checkFreezePass() {
         let entered = document.getElementById('freeze-input').value.trim();
         if (entered === FREEZE_PASS) {
-            // تحديث السيرفر ليتم إلغاء الفريز عند الجميع
+            // تحديث السيرفر ليتم إلغاء الفريز نهائياً عند الجميع
             db.ref('system_freeze').set(false).then(() => {
                 document.getElementById('freeze-input').value = '';
                 alert("تم إلغاء التجميد من السيرفر واستعادة النظام للجميع! ✅");
@@ -500,7 +499,7 @@
         let enteredPass = document.getElementById('pass-input').value.trim();
 
         if (enteredPass === FREEZE_PASS) { 
-            // إرسال أمر تجميد سحابي لكل الأجهزة المتصلة
+            // تجميد النظام سحابياً وتثبيته على السيرفر
             db.ref('system_freeze').set(true).then(() => {
                 document.getElementById('pass-input').value = '';
             });
